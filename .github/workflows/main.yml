@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  mc1:
+    image: itzg/minecraft-server
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+    volumes:
+      - ./mc1-data:/data
+  mc2:
+    image: itzg/minecraft-server
+    ports:
+      - "25566:25565"
+    environment:
+      EULA: "TRUE"
+    volumes:
+      - ./mc2-data:/data
