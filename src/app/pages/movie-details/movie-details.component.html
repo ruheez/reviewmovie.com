@@ -1,0 +1,106 @@
+<ng-container *ngIf="movie">
+  <app-slider [movies]="[movie]" [isBanner]="true"></app-slider>
+  <p-tabView>
+    <p-tabPanel header="Overview">
+      <ng-template pTemplate="header">
+        <span class="material-icons">info</span>
+        <span>&nbsp;Overview</span>
+      </ng-template>
+      <div class="grid">
+        <div class="col-12 md:col-3 lg:col-3">
+          <!--          <img class="poster" [src]="baseUrlImage + defaultImageSize + movie.poster_path" [alt]="movie.title"/>-->
+          <p-image class="poster" [src]="baseUrlImage + defaultImageSize + movie.poster_path" [alt]="movie.title"
+                   [preview]="true" width="100%"></p-image>
+        </div>
+        <div class="col-12 md:col-9 lg:cpl-9">
+          <h2>Overview</h2>
+          <p class="overview">{{movie.overview}}</p>
+          <div class="stat">
+            <div class="label">Realse Date:</div>
+            <div class="value">{{movie.release_date | date: 'dd.MM.yyyy'}}</div>
+          </div>
+          <div class="stat">
+            <div class="label">Language:</div>
+            <div class="value">{{movie.original_language | uppercase}}</div>
+          </div>
+          <div class="stat">
+            <div class="label">Revenue:</div>
+            <div class="value">{{movie.revenue | currency}}</div>
+          </div>
+          <div class="stat">
+            <div class="label">Duration:</div>
+            <div class="value">{{movie.runtime}} min</div>
+          </div>
+          <div class="stat">
+            <div class="label">Status:</div>
+            <div class="value">{{movie.status}}</div>
+          </div>
+          <div class="stat">
+            <div class="label">Genres:</div>
+            <div class="value">
+              <span *ngFor="let genre of movie.genres ; last as isLast">{{ genre.name }}
+                <span *ngIf="!isLast">,&nbsp;</span>
+              </span>
+            </div>
+          </div>
+          <div class="stat">
+            <div class="label">Adult:</div>
+            <div class="value">{{movie.adult ? 'Yes' : 'None'}}</div>
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Videos">
+      <ng-template pTemplate="header">
+        <span class="material-icons">videocam</span>
+        <span>&nbsp;Videos</span>
+      </ng-template>
+      <div class="grid" *ngIf="movieVideos">
+        <ng-container *ngFor="let movieVideo of movieVideos">
+          <div class="col-12 md:col-4 lg:col-4">
+            <app-video-embed [videoSite]="movieVideo.site"
+                             [videoTitle]="movie.title"
+                             [videoKey]="movieVideo.key"
+            ></app-video-embed>
+          </div>
+        </ng-container>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Photos">
+      <ng-template pTemplate="header">
+        <span class="material-icons">photo</span>
+        <span>&nbsp;Photos</span>
+      </ng-template>
+      <div class="grid">
+        <ng-container *ngFor="let movieImage of movieImages?.backdrops">
+          <div class="col-12 md:col-3 lg:col-3">
+            <p-image class="poster" [src]="baseUrlImage + defaultImageSize + movieImage.file_path" [alt]="movie.title"
+                     [preview]="true" width="100%"></p-image>
+          </div>
+        </ng-container>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+  <p-carousel [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000" *ngIf="movieCredits"  [value]="movieCredits!.cast" >
+    <ng-template let-actor pTemplate="item">
+      <div class="actor-item">
+        <div class="actor-item-content">
+          <div class="p-mb-3 p-p-1">
+            <img *ngIf="actor.profile_path" [src]="baseUrlImage + defaultImageSize + actor.profile_path" [alt]="actor.name" class="actor-image"   />
+          </div>
+          <div style="text-align: center">
+            <h4 class="p-mb-1">{{actor.original_name}}</h4>
+            <h5 class="p-mt-0 p-mb-3">as {{actor.character}}</h5>
+<!--            <span [class]="'actor-badge status-'">{{"actor.inventoryStatus"}}</span>-->
+            <div class="car-buttons p-mt-5">
+<!--              <p-button type="button" styleClass="p-button p-button-rounded p-mr-2" icon="pi pi-search"></p-button>-->
+<!--              <p-button type="button" styleClass="p-button-success p-button-rounded p-mr-2" icon="pi pi-star-fill"></p-button>-->
+<!--              <p-button type="button" styleClass="p-button-help p-button-rounded" icon="pi pi-cog"></p-button>-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-carousel>
+  <app-items-banner [movieTypes]="movieSimilars" [sectionTitle]="'Similar Movies'"></app-items-banner>
+</ng-container>
